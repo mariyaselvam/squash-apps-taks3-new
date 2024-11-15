@@ -10,7 +10,11 @@ app.use(cors());
 
 
 // connecting DB
-mongoose.connect(process.env.MONGODB_URI+"/mern-app")
+// mongoose.connect(process.env.MONGODB_URI+"/mern-app")
+mongoose.connect(process.env.MONGODB_URI + "/mern-app", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
 
 .then(() => {
     console.log("DB connected");
