@@ -11,10 +11,7 @@ app.use(cors());
 
 // connecting DB
 // mongoose.connect(process.env.MONGODB_URI+"/mern-app")
-mongoose.connect(process.env.MONGODB_URI + "/mern-app", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
+mongoose.connect(process.env.MONGODB_URI + "/mern-app")
 
 .then(() => {
     console.log("DB connected");
@@ -33,7 +30,7 @@ const todoSchema = new mongoose.Schema({
 });
 
 // creating model
-const todoModel = mongoose.model("Todo", todoSchema); 
+const todoModel = mongoose.model("Todos", todoSchema); 
 
 // sample memory storage for todo items
 let = todos = [];
@@ -50,6 +47,15 @@ app.post("/todos" , async (req, res) => {
         res.status(500).json({message:error.message});
     }
 })
+
+app.get("/" , async (req , res) => {
+    try {
+      res.send("welcome")
+    } catch (error) {
+         console.log(error);
+         res.status(500).json({message:error.message});
+    }
+ })
 
 // get all items 
 app.get("/todos" , async (req , res) => {
