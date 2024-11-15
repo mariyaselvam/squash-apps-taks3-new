@@ -2,23 +2,24 @@ const express = require("express");
 const mongoose =  require("mongoose");
 const cors = require("cors");
 require('dotenv').config()
-const app = express();
 
-app.use(express.json());
-
-app.use(cors());
-
-
-// connecting DB
-// mongoose.connect(process.env.MONGODB_URI+"/mern-app")
 mongoose.connect(process.env.MONGODB_URI + "/mern-app")
-
 .then(() => {
     console.log("DB connected");
 })
 .catch((err) => {
     console.log(err);
 })
+
+const app = express();
+
+app.use(express.json());
+
+app.use(cors());
+
+// connecting DB
+// mongoose.connect(process.env.MONGODB_URI+"/mern-app")
+
 
 // creating todoschema
 const todoSchema = new mongoose.Schema({
