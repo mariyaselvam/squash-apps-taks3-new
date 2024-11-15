@@ -2,24 +2,23 @@ const express = require("express");
 const mongoose =  require("mongoose");
 const cors = require("cors");
 require('dotenv').config()
-
-mongoose.connect(process.env.MONGODB_URI + "/mern-app")
-.then(() => {
-    console.log("DB connected");
-})
-.catch((err) => {
-    console.log(err);
-})
-
 const app = express();
 
 app.use(express.json());
 
 app.use(cors());
 
+
 // connecting DB
 // mongoose.connect(process.env.MONGODB_URI+"/mern-app")
+mongoose.connect(process.env.MONGODB_URI + "/mern-app")
 
+.then(() => {
+    console.log("DB connected");
+})
+.catch((err) => {
+    console.log(err);
+})
 
 // creating todoschema
 const todoSchema = new mongoose.Schema({
@@ -31,7 +30,7 @@ const todoSchema = new mongoose.Schema({
 });
 
 // creating model
-const todoModel = mongoose.model("Todos", todoSchema); 
+const todoModel = mongoose.model("Todo", todoSchema); 
 
 // sample memory storage for todo items
 let = todos = [];
@@ -51,7 +50,7 @@ app.post("/todos" , async (req, res) => {
 
 app.get("/" , async (req , res) => {
     try {
-      res.send("welcome")
+      res.send("welcome ")
     } catch (error) {
          console.log(error);
          res.status(500).json({message:error.message});
