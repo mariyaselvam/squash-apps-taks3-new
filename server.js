@@ -9,18 +9,18 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Connect to MongoDB
+// MongoDB Connection
 mongoose
-  .connect(`${process.env.MONGODB_URI}/mern-app`)
+  .connect(process.env.MONGODB_URI+"/mern-app") // Simplified connection string
   .then(() => {
     console.log("Connected to MongoDB");
   })
   .catch((err) => {
     console.error("Failed to connect to MongoDB:", err.message);
-    process.exit(1); // Exit if unable to connect
+    process.exit(1); // Exit the application if database connection fails
   });
 
-// Define Todo Schema
+// Todo Schema
 const todoSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -32,7 +32,7 @@ const todoSchema = new mongoose.Schema({
   },
 });
 
-// Create Todo Model
+// Todo Model
 const Todo = mongoose.model("Todo", todoSchema);
 
 // Routes
@@ -40,6 +40,13 @@ const Todo = mongoose.model("Todo", todoSchema);
 // Welcome Route
 app.get("/", (req, res) => {
   res.send("Welcome to the Todo API");
+});
+
+// Health Check Route
+app.get("/health", (req, res) => {
+  const state = mongoose.connection.readyState;
+  const states = ["disconnected", "connected", "connecting", "disconnecting"];
+  res.json({ dbConnection: states[state] });
 });
 
 // Create a new Todo
@@ -84,7 +91,7 @@ app.put("/todos/:id", async (req, res) => {
     const updatedTodo = await Todo.findByIdAndUpdate(
       id,
       { title, description },
-      { new: true }
+      { new: true } // Return the updated document
     );
 
     if (!updatedTodo) {
@@ -113,14 +120,14 @@ app.delete("/todos/:id", async (req, res) => {
       return res.status(404).json({ message: "Todo not found" });
     }
 
-    res.status(204).send();
+    res.status(204).send(); // No content
   } catch (error) {
     console.error("Error deleting todo:", error.message);
     res.status(500).json({ message: error.message });
   }
 });
 
-// Start the server
+// Start the Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
