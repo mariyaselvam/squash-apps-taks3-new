@@ -66,9 +66,9 @@ app.post("/todos", async (req, res) => {
 // Get all Todos
 app.get("/todos", async (req, res) => {
   try {
-    if (mongoose.connection.readyState !== 1) {
-      return res.status(500).json({ message: "Database connection error" });
-    }
+    // if (mongoose.connection.readyState !== 1) {
+    //   return res.status(500).json({ message: "Database connection error" });
+    // }
 
     const todos = await Todo.find();
     res.json(todos);
