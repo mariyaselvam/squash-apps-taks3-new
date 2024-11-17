@@ -14,14 +14,19 @@ mongoose
   .connect(`${process.env.MONGODB_URI}/mern-app`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 10000, // Timeout after 10 seconds
+    socketTimeoutMS: 45000,         // Close sockets after 45 seconds
   })
   .then(() => {
     console.log("Connected to MongoDB");
   })
   .catch((err) => {
     console.error("Failed to connect to MongoDB:", err.message);
-    process.exit(1); // Exit the process if the connection fails
+    process.exit(1); // Exit if unable to connect
   });
+
+// Enable Mongoose Debugging (Optional, for development purposes)
+mongoose.set("debug", true);
 
 // Define Todo Schema
 const todoSchema = new mongoose.Schema({
@@ -62,6 +67,11 @@ app.post("/todos", async (req, res) => {
 // Get all Todos
 app.get("/todos", async (req, res) => {
   try {
+    // Check MongoDB connection state
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(500).json({ message: "Database connection error" });
+    }
+
     const todos = await Todo.find();
     res.json(todos);
   } catch (error) {
@@ -75,6 +85,7 @@ app.put("/todos/:id", async (req, res) => {
   const { title, description } = req.body;
   const { id } = req.params;
 
+  // Validate MongoDB ObjectId
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid Todo ID" });
   }
@@ -101,6 +112,7 @@ app.put("/todos/:id", async (req, res) => {
 app.delete("/todos/:id", async (req, res) => {
   const { id } = req.params;
 
+  // Validate MongoDB ObjectId
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid Todo ID" });
   }
