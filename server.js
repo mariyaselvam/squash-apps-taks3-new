@@ -11,13 +11,13 @@ app.use(cors());
 
 // MongoDB Connection
 mongoose
-  .connect(process.env.MONGODB_URI+"/mern-app") // Simplified connection string
+  .connect(process.env.MONGODB_URI+"/mern-app") 
   .then(() => {
     console.log("Connected to MongoDB");
   })
   .catch((err) => {
     console.error("Failed to connect to MongoDB:", err.message);
-    process.exit(1); // Exit the application if database connection fails
+    process.exit(1); 
   });
 
 // Todo Schema
@@ -66,10 +66,6 @@ app.post("/todos", async (req, res) => {
 // Get all Todos
 app.get("/todos", async (req, res) => {
   try {
-    // if (mongoose.connection.readyState !== 1) {
-    //   return res.status(500).json({ message: "Database connection error" });
-    // }
-
     const todos = await Todo.find();
     res.json(todos);
   } catch (error) {
